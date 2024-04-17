@@ -60,10 +60,7 @@ pipeline {
                 def buildDate = new Date()
                 def failedStage = env.failedStageName
                 
-                def alertMessage = "Build Passed! ✅\n"
-                alertMessage += "\n"
-                alertMessage += "Build no: ${buildNumber}\n"
-                alertMessage += "Date: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n"
+                def alertMessage = "Build Passed! ✅\n\nBuild no: ${buildNumber}\nDate: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n"
                 
                 sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
             }
@@ -75,12 +72,7 @@ pipeline {
                 def buildDate = new Date()
                 def failedStage = env.failedStageName
                 
-                def alertMessage = "Build Failed! ❌\n"
-                alertMessage += "\n"
-                alertMessage += "Build no: ${buildNumber}\n"
-                alertMessage += "Date: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n"
-                alertMessage += "\n"
-                alertMessage += "Stage Failed: ${failedStage}\n"
+                def alertMessage = "Build Failed! ❌\n\nBuild no: ${buildNumber}\nDate: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n\nStage Failed: ${failedStage}\n\n"
 
                 if (failedStage == "Quality Gate") {
                     def username = 'admin'
@@ -104,9 +96,9 @@ pipeline {
                             alertMessage += "\t- ${condition.metricKey}: ${condition.actualValue}% | max: ${condition.errorThreshold}% \n"
                         }
                     }
-                } else  {
-                    alertMessage += "Please refer to logs sent via email for more information."
                 }
+                
+                alertMessage += "\nPlease refer to logs sent via email for more information."
                 
                 sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
             
