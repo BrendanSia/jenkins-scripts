@@ -60,7 +60,7 @@ pipeline {
                 def buildDate = new Date()
                 def failedStage = env.failedStageName
                 
-                def alertMessage = "Build Passed! ✅\n\nBuild no: ${buildNumber}\nDate: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n"
+                def alertMessage = "𝘽𝙪𝙞𝙡𝙙 𝙋𝙖𝙨𝙨𝙚𝙙! ✅\n\nBuild no: ${buildNumber}\nDate: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n"
                 
                 sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
             }
@@ -72,7 +72,7 @@ pipeline {
                 def buildDate = new Date()
                 def failedStage = env.failedStageName
                 
-                def alertMessage = "Build Failed! ❌\n\nBuild no: ${buildNumber}\nDate: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n\nStage Failed: ${failedStage}\n\n"
+                def alertMessage = "𝘽𝙪𝙞𝙡𝙙 𝙁𝙖𝙞𝙡𝙚𝙙! ❌\n\nBuild no: ${buildNumber}\nDate: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n\nStage Failed: ${failedStage}\n\n"
 
                 if (failedStage == "Quality Gate") {
                     def username = 'admin'
