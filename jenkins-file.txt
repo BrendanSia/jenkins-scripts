@@ -2,6 +2,11 @@ import groovy.json.JsonSlurper
 
 pipeline {
     agent any
+    environment {
+        // Telegram configuration
+        botToken = credentials('TelegramBot')
+        chatId = credentials('TelegramChatIdTest')
+    }
     stages {
         stage('Clean Workspace') {
             steps {
@@ -60,7 +65,7 @@ pipeline {
                 alertMessage += "Build no: ${buildNumber}\n"
                 alertMessage += "Date: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n"
                 
-                sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"-1002005133194\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot7134798871:AAFpwT4nsKTfY19XFR4dapq3XQTpq0lQZFc/sendMessage\""
+                sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
             }
         }
         
@@ -103,7 +108,7 @@ pipeline {
                     alertMessage += "Please refer to logs sent via email for more information."
                 }
                 
-                sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"-1002005133194\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot7134798871:AAFpwT4nsKTfY19XFR4dapq3XQTpq0lQZFc/sendMessage\""
+                sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
             
                 emailext(
                     subject : "Pipeline Build #${buildNumber} Failure",
