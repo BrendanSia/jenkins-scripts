@@ -5,11 +5,11 @@ def alert(String status, String buildNumber, String failedStage, String username
     def buildDate = new Date().format('yyyy-MM-dd HH:mm:ss')
     def alertMessage = ""
 
-    if (status == "SUCCESS") {
+    if (status.equals("SUCCESS")) {
         alertMessage += "𝘽𝙪𝙞𝙡𝙙 𝙋𝙖𝙨𝙨𝙚𝙙! ✅\n\nBuild no: ${buildNumber}\nDate: ${buildDate}\n"
     } else {  
         alertMessage += "𝘽𝙪𝙞𝙡𝙙 𝙁𝙖𝙞𝙡𝙚𝙙! ❌\n\nBuild no: ${buildNumber}\nDate: ${buildDate}\n\nStage Failed: ${failedStage}\n\n"
-        if (failedStage == "Quality Gate") {
+        if (failedStage?.equals("Quality Gate")) {
             def authString = "${username}:${password}".bytes.encodeBase64().toString()
 
             def response = httpRequest(
