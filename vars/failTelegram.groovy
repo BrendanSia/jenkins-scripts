@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def alertMessage(String name) {
+def alertMessage(String name, String buildNumber, String failedStage) {
     echo "Hello, ${name}!"
     def alertMessage = "𝘽𝙪𝙞𝙡𝙙 𝙁𝙖𝙞𝙡𝙚𝙙! ❌\n\nBuild no: ${buildNumber}\nDate: ${new Date().format('yyyy-MM-dd HH:mm:ss')}\n\nStage Failed: ${failedStage}\n\n"
     echo "${alertMessage}"
