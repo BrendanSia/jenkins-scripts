@@ -1,52 +1,29 @@
-def alert(){
-    def build_number = args[0]
-    def build_date = args[1]
-    def failed_stage = args[2]
-    def chat_id = args[3]
-    def bot_token = args[4]
+def alertTelegram(String chatId, String botToken, String username, String password, String failedStage) {
+    def alertMessage = "𝘽𝙪𝙞𝙡𝙙 𝙁𝙖𝙞𝙡𝙚𝙙! ❌\n\nBuild no: ${env.BUILD_NUMBER}\nDate: ${new Date().format('yyyy-MM-dd HH:mm:ss')}\n\nStage Failed: ${failedStage}\n\n"
 
-    def alertMessage = "𝘽𝙪𝙞𝙡𝙙 𝙁𝙖𝙞𝙡𝙚𝙙! ❌\n\nBuild no: ${buildNumber}\nDate: ${buildDate.format('yyyy-MM-dd HH:mm:ss')}\n\nStage Failed: ${failedStage}\n\n"
+    if (failedStage == "Quality Gate") {
+        def authString = "${username}:${password}".bytes.encodeBase64().toString()
 
-    // Quality Gate specific details (optional)
-    if (failed_stage == "Quality Gate") {
-        def username = "admin"
-        def password = "Bs2024"
-        def authString = Base64.encoder.encodeToString("${username}:${password}".bytes).trim()
-
-        def response = new URL("http://localhost:9000/api/qualitygates/project_status?projectKey=com.demo-project:brendan-sia&branch=main").text
-        def jsonData = new JsonSlurper().parseText(response)
+        def response = httpRequest(
+            url: 'http://localhost:9000/api/qualitygates/project_status?projectKey=com.demo-project:brendan-sia&branch=main',
+            method: 'GET',
+            customHeaders: [[name: 'Authorization', value: "Basic ${authString}"]]
+        )
+        def jsonSlurper = new JsonSlurper()
+        def jsonData = jsonSlurper.parseText(response.content)
 
         def coverage = jsonData.projectStatus.conditions
-
-        alert_message += "Details: \n"
+        alertMessage += "Details: \n"
         coverage.each { condition ->
-            def metricKey = condition.metricKey
-            def actualValue = condition.actualValue
-            def errorThreshold = condition.errorThreshold
-
-            if (metricKey == "coverage") {
-            alert_message += "\t- ${metricKey}: ${actualValue}% | min: ${errorThreshold}% \n"
+            if (condition.metricKey == "coverage") {
+                alertMessage += "\t- ${condition.metricKey}: ${condition.actualValue}% | min: ${condition.errorThreshold}% \n"
             } else {
-            alert_message += "\t- ${metricKey}: ${actualValue}% | max: ${errorThreshold}% \n"
+                alertMessage += "\t- ${condition.metricKey}: ${condition.actualValue}% | max: ${condition.errorThreshold}% \n"
             }
         }
     }
 
-    alert_message += "\nPlease refer to logs sent via email for more information."
+    alertMessage += "\n𝙋𝙡𝙚𝙖𝙨𝙚 𝙧𝙚𝙛𝙚𝙧 𝙩𝙤 𝙡𝙤𝙜𝙨 𝙖𝙩𝙩𝙖𝙘𝙝𝙚𝙙 𝙞𝙣 𝙚𝙢𝙖𝙞𝙡 𝙛𝙤𝙧 𝙢𝙤𝙧𝙚 𝙞𝙣𝙛𝙤𝙧𝙢𝙖𝙩𝙞𝙤𝙣."
 
-    def url = "https://api.telegram.org/bot${bot_token}/sendMessage"
-    def data = [
-        chat_id: chat_id,
-        text: alert_message,
-        disable_notification: false
-    ]
-
-    def json = JsonOutput.toJson(data)
-
-    def conn = new URL(url).openConnection()
-    conn.setRequestProperty("Content-Type", "application/json")
-    conn.doOutput = true
-    conn.outputStream.write(json.bytes)
-
-    conn.responseCode == 200 ? println("Message sent successfully!") : println("Failed to send message!")
+    sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
 }
