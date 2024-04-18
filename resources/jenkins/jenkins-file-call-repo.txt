@@ -58,6 +58,7 @@ pipeline {
         success {
             script {
                 postBuildAlert.alert("SUCCESS", env.BUILD_NUMBER, null, null, null, chatId, botToken)
+                // build job: 'Pipeline_B', wait: false // to trigger other builds 
             }
         }
         
