@@ -26,7 +26,6 @@ def alertMessage(String name, String buildNumber, String failedStage, String use
     }
 
     alertMessage += "\n𝙋𝙡𝙚𝙖𝙨𝙚 𝙧𝙚𝙛𝙚𝙧 𝙩𝙤 𝙡𝙤𝙜𝙨 𝙖𝙩𝙩𝙖𝙘𝙝𝙚𝙙 𝙞𝙣 𝙚𝙢𝙖𝙞𝙡 𝙛𝙤𝙧 𝙢𝙤𝙧𝙚 𝙞𝙣𝙛𝙤𝙧𝙢𝙖𝙩𝙞𝙤𝙣."
-    echo "${alertMessage}"
 
-    // sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
+    sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
 }
