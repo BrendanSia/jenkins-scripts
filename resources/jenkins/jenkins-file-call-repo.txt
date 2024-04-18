@@ -1,4 +1,4 @@
-@Library("notification-scripts") _
+@Library("jenkins-scripts") _
 
 pipeline {
     agent any
