@@ -13,3 +13,7 @@ def call(String status, String buildNumber, String buildDate, String failedStage
         }
     }
 }
+
+def print(){
+    echo "Hello World!"
+}
