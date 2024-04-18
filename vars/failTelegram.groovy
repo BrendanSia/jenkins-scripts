@@ -29,3 +29,7 @@ def alert(String chatId, String botToken, int buildNumber, String username, Stri
 
     sh "curl -X POST -H \"Content-Type: application/json\" -d '{\"chat_id\": \"${chatId}\", \"text\": \"${alertMessage}\", \"disable_notification\": false}' \"https://api.telegram.org/bot${botToken}/sendMessage\""
 }
+
+def print(String name) {
+    echo "Hello, ${name}!"
+}
