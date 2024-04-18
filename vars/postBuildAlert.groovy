@@ -35,7 +35,7 @@ def alert(String status, String buildNumber, String failedStage, String username
 
         emailext(
             subject : "Pipeline Build #${buildNumber} Failure",
-            body : """<p>Hi team,<br><br>The current build has failed at:<br>- Stage failed: ${failedStageName}<br>- Date: ${buildDate}<br><br>Logs are attached for more information.<br><br>Regards,<br>Paydaes Team</p>""",
+            body : """<p>Hi team,<br><br>The current build has failed at the following stage:<br>- ${failedStageName}<br><br>Logs are attached for more information.<br><br>Regards,<br>Paydaes Team</p>""",
             attachLog : true,
             compressLog : true,
             from : '',
