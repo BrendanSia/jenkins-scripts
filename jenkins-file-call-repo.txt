@@ -57,19 +57,13 @@ pipeline {
     post {
         success {
             script {
-                def buildNumber = env.BUILD_NUMBER
-                def failedStage = env.failedStageName
-                
-                postBuildAlert.alert("SUCCESS", buildNumber, failedStage, sqId, sqPw, chatId, botToken)
+                postBuildAlert.alert("SUCCESS", env.BUILD_NUMBER, null, null, null, chatId, botToken)
             }
         }
         
         failure {
             script {
-                def buildNumber = env.BUILD_NUMBER
-                def failedStage = env.failedStageName
-                
-                postBuildAlert.alert("FAILED", buildNumber, failedStage, sqId, sqPw, chatId, botToken)
+                postBuildAlert.alert("FAILED", env.BUILD_NUMBER, env.failedStageName, sqId, sqPw, chatId, botToken)
             }
         }
     }
