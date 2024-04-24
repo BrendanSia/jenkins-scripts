@@ -10,7 +10,7 @@ def alert(String status, String buildNumber, String failedStage, String username
     } else {  
         alertMessage += "𝘽𝙪𝙞𝙡𝙙 𝙁𝙖𝙞𝙡𝙚𝙙! ❌\n\nBuild no: ${buildNumber}\nDate: ${buildDate}\n\nStage Failed: ${failedStage}\n\n"
         if (failedStage?.equals("Quality Gate")) {
-            def qualityGate = ""
+            //def qualityGate = ""
             def authString = "${username}:${password}".bytes.encodeBase64().toString()
 
             def response = httpRequest(
@@ -25,13 +25,13 @@ def alert(String status, String buildNumber, String failedStage, String username
             alertMessage += "Details: \n"
             coverage.each { condition ->
                 if (condition.metricKey == "coverage") {
-                    qualityGate += "\t- ${condition.metricKey}: ${condition.actualValue}% | min: ${condition.errorThreshold}% \n"
+                    alertMessage += "\t- ${condition.metricKey}: ${condition.actualValue}% | min: ${condition.errorThreshold}% \n"
                 } else {
-                    qualityGate += "\t- ${condition.metricKey}: ${condition.actualValue}% | max: ${condition.errorThreshold}% \n"
+                    alertMessage += "\t- ${condition.metricKey}: ${condition.actualValue}% | max: ${condition.errorThreshold}% \n"
                 }
             }
-            alertMessage += qualityGate
-            echo qualityGate
+            //alertMessage += qualityGate
+            echo jsonData
         }
 
         alertMessage += "\n𝙋𝙡𝙚𝙖𝙨𝙚 𝙧𝙚𝙛𝙚𝙧 𝙩𝙤 𝙡𝙤𝙜𝙨 𝙖𝙩𝙩𝙖𝙘𝙝𝙚𝙙 𝙞𝙣 𝙚𝙢𝙖𝙞𝙡 𝙛𝙤𝙧 𝙢𝙤𝙧𝙚 𝙞𝙣𝙛𝙤𝙧𝙢𝙖𝙩𝙞𝙤𝙣."
